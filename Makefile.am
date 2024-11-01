@@ -122,7 +122,7 @@ winrelease: roswell/Makefile
 	cp lisp/*.lisp lisp/*.ros lisp/*.el roswell/lisp
 	cd documents;MSYSTEM=MINGW64 make roswell.chm
 	cp documents/roswell.chm roswell/documents
-	7z a Roswell-`if [ $$MSYSTEM = 'MINGW64' ];then echo x86_64 ;else echo i686; fi`.zip roswell/ros.exe roswell/lisp/*.* roswell/documents/roswell.chm
+	7z a Roswell-`if [ "$$MSYSTEM" = "MINGW64" ];then echo x86_64 ;else echo i686; fi`.zip roswell/ros.exe roswell/lisp/*.* roswell/documents/roswell.chm
 debian:
 	ros debian/debian.ros all
 test:
@@ -131,7 +131,7 @@ brewpr:
 	git pull
 	if [ `uname` = 'Darwin' ];then brew bump-formula-pr -v --url=https://github.com/roswell/roswell/archive/`git describe --abbrev=0 --tags`.tar.gz roswell; fi
 
-PACK = $(PACKAGE)-$(VERSION)-$(shell uname -s | tr '[A-Z]' '[a-z]' | sed -E 's/([^-]*).*/\1/')-$(shell uname -m)$(SBCL_BIN_VARIANT)
+PACK = $(PACKAGE)-$(VERSION)-$(shell uname -s | tr '[A-Z]' '[a-z]' | sed -E 's/([^-]*).*/\1/')-$(ARCH)$(SBCL_BIN_VARIANT)
 
 roswell/Makefile:
 	rm -rf roswell
@@ -171,7 +171,7 @@ $(PACK).tar.bz2: roswell/Makefile
 
 pack: $(PACK).tar.bz2
 
-WINPACK = roswell_$(VERSION)_$(shell if [ $$MSYSTEM = 'MINGW64' ];then echo amd64 ;else echo i686; fi)
+WINPACK = roswell_$(VERSION)_$(shell if [ "$$MSYSTEM" = "MINGW64" ];then echo amd64 ;else echo i686; fi)
 
 pack.zip: $(PACK).tar.bz2
 	7z a $(WINPACK).zip roswell
